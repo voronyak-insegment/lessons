@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+        .calc-button {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+        }
+        .big{
+            line-height: 390%;
+        }
+        .tbl {
+            width: 100%;
+        }
+
+        td {
+            width: 25%;
+        }
+
+        [class*="col-"] {
+            padding: 0;
+            /*display: flex;
+            flex-direction: column;*/
+        }
+
+        #display {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" id="dspMem" value="undefined">
+<input type="hidden" id="calcMem" value="undefined">
+<input type="hidden" id="oprMem" value="undefined">
+<input type="hidden" id="newValTrigger" value="0">
+<input type="hidden" id="errTrigger" value="0">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-offset-4 col-sm-4">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="display"></label>
+                            <input type="text" class="form-control" id="display" placeholder="">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="tbl">
+                            <tr>
+                                <td>
+                                    <button class="btn btn-danger calc-button">C</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger calc-button">CE</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary calc-button">/</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary calc-button">*</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn btn-default calc-button">1</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default calc-button">2</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default calc-button">3</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary calc-button">-</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn btn-default calc-button">4</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default calc-button">5</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default calc-button">6</button>
+                                </td>
+                                <td rowspan="2">
+                                    <button class="btn btn-primary calc-button big">+</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn btn-default calc-button">7</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default calc-button">8</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default calc-button">9</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn btn-primary calc-button">+/-</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default calc-button">0</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default calc-button">.</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary calc-button">=</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function reset(type) {
+
+    }
+
+    function defBtnClick(val) {
+        if(isErr())return;
+        var newLine = $('#newValTrigger');
+        var dsp = $('#display');
+
+        if(newLine.val()=='1'){
+            dsp.val('');
+            newLine.val('0');
+        }
+
+        if (val == '.' && dsp.val().includes('.'))return;
+
+        dsp.val(dsp.val() + val);
+    }
+
+    function dngBtnClick(val) {
+        switch (val) {
+            case 'C':
+                $('#display').val('');
+                break;
+            default:
+                break;
+        }
+    }
+
+    function oprClick(op,dsp){
+        if(isErr())return;
+        $('#oprMem').val(op);
+        $('#dspMem').val(dsp);
+        $('#newValTrigger').val('1');
+    }
+
+    function div(val_1, val_2) {
+        if(parseFloat(val_2)!= 0.0){
+            return parseFloat(val_1)/parseFloat(val_2);
+        }
+        return 'div by 0';
+    }
+
+    function opr(op) {
+        var val_1 = $('#dspMem').val();
+        var val_2 = $('#display').val();
+        switch (op) {
+            case '/':
+                div(val_1,val_2);
+                break;
+            case '*':
+                mul(val_1,val_2);
+                break;
+            case '-':
+                sub(val_1,val_2);
+                break;
+            case '+':
+                add(val_1,val_2);
+                break;
+            case 'pow':
+                pow(val_1,val_2);
+                break;
+            case '=':
+                eql(val_1,val_2);
+                break;
+            default:
+                break;
+        }
+    }
+
+    function isErr(){
+        var error = $('#errTrigger').val();
+        return error != '0';
+    }
+
+    $(document).ready(function () {
+        $('.btn-default').click(function () {
+            if(isErr())return;
+            defBtnClick(this.innerText);
+        });
+        $('.btn-danger').click(function () {
+            dngBtnClick(this.innerText);
+        });
+        $('.btn-primary').click(function () {
+            if(isErr())return;
+            oprClick(this.innerText, $('#display').val());
+        });
+    });
+</script>
+</body>
+</html>
