@@ -166,7 +166,7 @@
             case 'C':
                 $('#display').val('');
                 $('#dspMem').val('undefined');
-                $('#oprMem').val('undefined')
+                $('#oprMem').val('undefined');
                 break;
             default:
                 break;
@@ -180,8 +180,17 @@
 
     function oprClick(op, dsp) {
         if (isErr())return;
-        $('#oprMem').val(op);
-        $('#dspMem').val(dsp);
+        var oprMem = $('#oprMem');
+        var dspMem = $('#dspMem');
+        var res = 0;
+
+        if(oprMem.val()!='undefined'&&dspMem.val()!= 'undefined'){
+            res = opr(oprMem.val());
+        }
+
+        oprMem.val(op);
+        dspMem.val(res);
+
         $('#newValTrigger').val('1');
     }
 
@@ -200,25 +209,20 @@
         var val_2 = $('#display').val();
         switch (op) {
             case '/':
-                div(val_1, val_2);
-                break;
+                return div(val_1, val_2);
             case '*':
-                mul(val_1, val_2);
-                break;
+                return mul(val_1, val_2);
             case '-':
-                sub(val_1, val_2);
-                break;
+                return sub(val_1, val_2);
             case '+':
-                add(val_1, val_2);
-                break;
+                return add(val_1, val_2);
             case 'pow':
-                pow(val_1, val_2);
-                break;
-            case '=':
+                return pow(val_1, val_2);
+            /*case '=':
                 eql(val_1, val_2);
-                break;
+                break;*/
             default:
-                break;
+                return
         }
     }
 
