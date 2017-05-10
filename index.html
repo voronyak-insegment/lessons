@@ -60,7 +60,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="display"></label>
-                            <input type="text" class="form-control" id="display" placeholder="">
+                            <input type="text" class="form-control" id="display" placeholder="" value="0">
                         </div>
                     </div>
                 </div>
@@ -154,17 +154,20 @@
         if (newLine.val() == '1') {
             dsp.val('');
             newLine.val('0');
+
         }
 
         if (val == '.' && dsp.val().includes('.'))return;
-
-        dsp.val(dsp.val() + val);
+        if (dsp.val() == 0) {
+            dsp.val(val)
+        }
+        else dsp.val(dsp.val() + val);
     }
 
     function dngBtnClick(val) {
         switch (val) {
             case 'C':
-                $('#display').val('');
+                $('#display').val('0');
                 $('#dspMem').val('undefined');
                 $('#oprMem').val('undefined');
                 break;
@@ -173,23 +176,43 @@
         }
         switch (val) {
             case 'CE':
-                $('#display').val('');
+                $('#display').val('0');
                 break;
         }
     }
 
     function oprClick(op, dsp) {
         if (isErr())return;
-        var oprMem = $('#oprMem');
-        var dspMem = $('#dspMem');
-        var res = 0;
 
-        if(oprMem.val()!='undefined'&&dspMem.val()!= 'undefined'){
-            res = opr(oprMem.val());
+        if(!dsp||!op){
+            return;
         }
 
+        var oprMem = $('#oprMem');
+        var dspMem = $('#dspMem');
+        var errTrig = $('#errTrigger');
+        var res = null;
+
+        if(oprMem.val()==''||oprMem.val()=='undefined'){
+            oprMem.val(op);
+        }else{
+            if(dspMem.val()=='undefined'||dspMem.val()==''){
+                errTrig.val('1');
+                return;
+            }else{
+                res = opr(op, dspMem.val(), dsp);
+            }
+        }
+
+
+
         oprMem.val(op);
-        dspMem.val(res);
+        k
+        if(res){
+            dspMem.val(res);
+        }else{
+            dspMem.val(dsp);
+        }
 
         $('#newValTrigger').val('1');
     }
@@ -202,11 +225,24 @@
     }
 
     function mul(val_1, val_2) {
-        return parseFloat(val_1) * parseFloat(val_2)
+        return parseFloat(val_1) * parseFloat(val_2);
     }
-    function opr(op) {
-        var val_1 = $('#dspMem').val();
-        var val_2 = $('#display').val();
+    function sub(val_1, val_2) {
+        return parseFloat(val_1) - parseFloat(val_2);
+    }
+    function add(val_1, val_2) {
+        return parseFloat(val_1) + parseFloat(val_2);
+    }
+
+    function opr(op, memVal, dspVal) {
+        var val_1 =
+            memVal?
+                memVal:
+                $('#dspMem').val();
+        var val_2 =
+            dspVal?
+                dspVal:
+                $('#display').val();
         switch (op) {
             case '/':
                 return div(val_1, val_2);
@@ -218,9 +254,9 @@
                 return add(val_1, val_2);
             case 'pow':
                 return pow(val_1, val_2);
-            /*case '=':
-                eql(val_1, val_2);
-                break;*/
+            case '=':
+                return eql(val_1, val_2);
+                break;
             default:
                 return
         }
