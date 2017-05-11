@@ -207,7 +207,6 @@
 
 
         oprMem.val(op);
-        k
         if(res){
             dspMem.val(res);
         }else{
@@ -232,6 +231,15 @@
     }
     function add(val_1, val_2) {
         return parseFloat(val_1) + parseFloat(val_2);
+    }
+    function eql(val_1, val_2) {
+        if (oprMem == 'undefined') return;
+        if (oprMem == '+') return add(val_1, val_2);
+        if (oprMem == '-') return sub(val_1, val_2);
+        if (oprMem == '*') return mul(val_1, val_2);
+        if (oprMem == '/') return div(val_1, val_2);
+
+
     }
 
     function opr(op, memVal, dspVal) {
