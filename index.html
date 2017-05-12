@@ -142,7 +142,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    function reset(type) {
+    function res (val) {
 
     }
 
@@ -184,7 +184,7 @@
     function oprClick(op, dsp) {
         if (isErr())return;
 
-        if(!dsp||!op){
+        if (!dsp || !op) {
             return;
         }
 
@@ -193,28 +193,31 @@
         var errTrig = $('#errTrigger');
         var res = null;
 
-        if(oprMem.val()==''||oprMem.val()=='undefined'){
+        if (oprMem.val() == '' || oprMem.val() == 'undefined') {
             oprMem.val(op);
-        }else{
-            if(dspMem.val()=='undefined'||dspMem.val()==''){
+        } else {
+            if (dspMem.val() == 'undefined' || dspMem.val() == '') {
                 errTrig.val('1');
                 return;
-            }else{
+            } else {
                 res = opr(op, dspMem.val(), dsp);
             }
         }
 
-
+        if(res!=null) $('#display').val(res);
 
         oprMem.val(op);
-        if(res){
+        if (res) {
             dspMem.val(res);
-        }else{
+
+
+        } else {
             dspMem.val(dsp);
         }
 
         $('#newValTrigger').val('1');
     }
+        
 
     function div(val_1, val_2) {
         if (parseFloat(val_2) != 0.0) {
@@ -232,24 +235,16 @@
     function add(val_1, val_2) {
         return parseFloat(val_1) + parseFloat(val_2);
     }
-    function eql(val_1, val_2) {
-        if (oprMem == 'undefined') return;
-        if (oprMem == '+') return add(val_1, val_2);
-        if (oprMem == '-') return sub(val_1, val_2);
-        if (oprMem == '*') return mul(val_1, val_2);
-        if (oprMem == '/') return div(val_1, val_2);
 
-
-    }
 
     function opr(op, memVal, dspVal) {
         var val_1 =
-            memVal?
-                memVal:
+            memVal ?
+                memVal :
                 $('#dspMem').val();
         var val_2 =
-            dspVal?
-                dspVal:
+            dspVal ?
+                dspVal :
                 $('#display').val();
         switch (op) {
             case '/':
@@ -260,11 +255,8 @@
                 return sub(val_1, val_2);
             case '+':
                 return add(val_1, val_2);
-            case 'pow':
-                return pow(val_1, val_2);
             case '=':
                 return eql(val_1, val_2);
-                break;
             default:
                 return
         }
@@ -274,6 +266,7 @@
         var error = $('#errTrigger').val();
         return error != '0';
     }
+
 
     $(document).ready(function () {
         $('.btn-default').click(function () {
@@ -286,6 +279,7 @@
         $('.btn-primary').click(function () {
             oprClick(this.innerText, $('#display').val());
         });
+
     });
 </script>
 </body>
