@@ -131,7 +131,7 @@
                                     <button class="btn btn-default calc-button">.</button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary calc-button">=</button>
+                                    <button class="btn btn-success calc-button">=</button>
                                 </td>
                             </tr>
                         </table>
@@ -142,8 +142,26 @@
     </div>
 </div>
 <script type="text/javascript">
-    function res (val) {
+    function resultClick() {
+        var val_1 = $('#display').val();
+        var val_2 = $('#dspMem').val();
+        var oper = $('#oprMem').val();
+        if ($('#newValTrigger').val() == 1) return;
+        else {
+            if (oper == '+') {
+                $('#display').val(add(val_1, val_2));
+            }
+            if (oper == '-') {
+                $('#display').val(sub(val_1, val_2));
+            }
+            if (oper == '/') {
+                $('#display').val(div(val_1, val_2));
 
+            }
+            if (oper == '*') {
+                $('#display').val(mul(val_1, val_2));
+            }
+        }
     }
 
     function defBtnClick(val) {
@@ -204,7 +222,7 @@
             }
         }
 
-        if(res!=null) $('#display').val(res);
+        if (res != null) $('#display').val(res);
 
         oprMem.val(op);
         if (res) {
@@ -217,7 +235,7 @@
 
         $('#newValTrigger').val('1');
     }
-        
+
 
     function div(val_1, val_2) {
         if (parseFloat(val_2) != 0.0) {
@@ -279,7 +297,9 @@
         $('.btn-primary').click(function () {
             oprClick(this.innerText, $('#display').val());
         });
-
+        $('.btn-success').click(function () {
+            resultClick(this.innerText, $('display').val());
+        })
     });
 </script>
 </body>
