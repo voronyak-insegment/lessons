@@ -168,8 +168,9 @@
         if (isErr())return;
         var newLine = $('#newValTrigger');
         var dsp = $('#display');
-
+        var dspMem = $('#dspMem');
         if (newLine.val() == '1') {
+            dspMem.val(dsp.val());
             dsp.val('');
             newLine.val('0');
 
@@ -218,7 +219,8 @@
                 errTrig.val('1');
                 return;
             } else {
-                res = opr(op, dspMem.val(), dsp);
+                res = resultClick(op, dspMem.val(), dsp);
+
             }
         }
 
@@ -273,8 +275,7 @@
                 return sub(val_1, val_2);
             case '+':
                 return add(val_1, val_2);
-            case '=':
-                return eql(val_1, val_2);
+
             default:
                 return
         }
